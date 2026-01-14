@@ -1,0 +1,39 @@
+<odoo>
+    <record id="action_reporte_aportes" model="ir.actions.report">
+        <field name="name">Reporte de Aportes</field>
+        <field name="model">aporte.registro</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">registro_aportes.reporte_aportes</field>
+        <field name="report_file">registro_aportes.reporte_aportes</field>
+    </record>
+
+    <template id="reporte_aportes">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <h2>Reporte de Aportes</h2>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Socio</th>
+                            <th>Mes</th>
+                            <th>Año</th>
+                            <th>Ingresos</th>
+                            <th>Egresos</th>
+                            <th>Saldo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="docs" t-as="r">
+                            <td><t t-esc="r.socio_id.name"/></td>
+                            <td><t t-esc="r.mes"/></td>
+                            <td><t t-esc="r.anio"/></td>
+                            <td><t t-esc="r.ingreso"/></td>
+                            <td><t t-esc="r.egreso"/></td>
+                            <td><t t-esc="r.saldo"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+</odoo>
