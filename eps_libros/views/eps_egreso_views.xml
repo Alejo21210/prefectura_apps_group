@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_eps_egreso_form" model="ir.ui.view">
+        <field name="name">eps.egreso.form</field>
+        <field name="model">eps.egreso</field>
+        <field name="arch" type="xml">
+            <form string="Comprobante de Egreso">
+                <header>
+                    <button name="action_validar" string="Validar Salida" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    
+                    <button name="action_cancelar" string="Anular" type="object" invisible="state in ('draft', 'cancel')"/>
+                    
+                    <button name="action_borrador" string="Volver a Borrador" type="object" invisible="state != 'cancel'"/>
+                    
+                    <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="ANULADO" bg_color="text-bg-danger" invisible="state != 'cancel'"/>
+
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="fecha"/>
+                            <field name="beneficiario"/>
+                            <field name="tipo_egreso" widget="radio"/>
+                        </group>
+                        <group>
+                            <field name="monto" widget="monetary"/>
+                            <field name="destino_credito" 
+                                   invisible="tipo_egreso != 'desembolso'" 
+                                   required="tipo_egreso == 'desembolso'"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="concepto"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eps_egreso_list" model="ir.ui.view">
+        <field name="name">eps.egreso.list</field>
+        <field name="model">eps.egreso</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state == 'cancel'" decoration-info="state == 'draft'">
+                <field name="name"/>
+                <field name="fecha"/>
+                <field name="beneficiario"/>
+                <field name="concepto"/>
+                <field name="tipo_egreso"/>
+                <field name="monto" sum="Total"/>
+                <field name="state" widget="badge" decoration-success="state == 'posted'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_eps_egreso" model="ir.actions.act_window">
+        <field name="name">Libro de Egresos</field>
+        <field name="res_model">eps.egreso</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_eps_root" name="Cajas EPS" sequence="10"/>
+    <menuitem id="menu_eps_egreso" name="Egresos" parent="menu_eps_root" action="action_eps_egreso" sequence="20"/>
+</odoo>
