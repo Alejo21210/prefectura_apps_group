@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- ========================================
+         VISTA LIST (LISTA)
+    ========================================= -->
+    <record id="view_eps_socio_tree" model="ir.ui.view">
+        <field name="name">eps.socio.list</field>
+        <field name="model">eps.socio</field>
+        <field name="arch" type="xml">
+            <list string="Socios" decoration-muted="estado!='activo'">
+                <field name="nombre_completo"/>
+                <field name="cedula"/>
+                <field name="caja_id"/>
+                <field name="fecha_ingreso"/>
+                <field name="edad"/>
+                <field name="genero"/>
+                <field name="tercera_edad_texto" optional="hide"/>
+                <field name="menor_edad_texto" optional="hide"/>
+                <field name="discapacidad_texto" optional="hide"/>
+                <field name="cabeza_hogar_texto" optional="hide"/>
+                <field name="telefono" optional="hide"/>
+                <field name="email" optional="hide"/>
+                <field name="estado" decoration-success="estado=='activo'" decoration-warning="estado=='inactivo'" decoration-danger="estado=='retirado'" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ========================================
+         VISTA FORM (FORMULARIO)
+    ========================================= -->
+    <record id="view_eps_socio_form" model="ir.ui.view">
+        <field name="name">eps.socio.form</field>
+        <field name="model">eps.socio</field>
+        <field name="arch" type="xml">
+            <form string="Socio">
+                <header>
+                    <button name="action_marcar_inactivo" 
+                            string="Marcar Inactivo" 
+                            type="object" 
+                            class="oe_highlight"
+                            invisible="estado != 'activo'"/>
+                    <button name="action_reactivar" 
+                            string="Reactivar" 
+                            type="object" 
+                            class="oe_highlight"
+                            invisible="estado == 'activo'"/>
+                    <field name="estado" widget="statusbar" statusbar_visible="activo,inactivo"/>
+                </header>
+                
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <!-- Espacio para botones estadísticos futuros (aportes, créditos, etc.) -->
+                    </div>
+                    
+                    <widget name="web_ribbon" title="Inactivo" bg_color="bg-danger" invisible="estado == 'activo'"/>
+                    
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Nombres"/>
+                        </h1>
+                        <label for="apellido" class="oe_edit_only"/>
+                        <h2>
+                            <field name="apellido" placeholder="Apellidos"/>
+                        </h2>
+                        <h3>
+                            <field name="cedula" placeholder="Cédula de identidad"/>
+                        </h3>
+                    </div>
+                    
+                    <group>
+                        <group string="Información Básica">
+                            <field name="caja_id" options="{'no_create': True}"/>
+                            <field name="fecha_ingreso"/>
+                            <field name="fecha_nacimiento"/>
+                            <field name="edad"/>
+                            <field name="estado_civil"/>
+                        </group>
+                        
+                        <group string="Contacto">
+                            <field name="telefono" widget="phone" placeholder="0987654321" options="{'type': 'tel'}"/>
+                            <field name="email" widget="email"/>
+                            <field name="direccion"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Indicadores Sociales" name="indicadores">
+                            <group>
+                                <group string="Datos Sociales">
+                                    <field name="genero"/>
+                                    <field name="es_tercera_edad"/>
+                                    <field name="es_menor_edad"/>
+                                    <field name="es_cabeza_hogar"/>
+                                    <field name="num_dependientes"/>
+                                </group>
+                                
+                                <group string="Discapacidad">
+                                    <field name="tiene_discapacidad"/>
+                                    <field name="tipo_discapacidad" invisible="not tiene_discapacidad"/>
+                                    <field name="porcentaje_discapacidad" invisible="not tiene_discapacidad"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Identificación Étnica">
+                                    <field name="es_indigena"/>
+                                    <field name="es_afroecuatoriano"/>
+                                    <field name="es_montubio"/>
+                                    <field name="es_mestizo"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Representante Legal" name="representante" invisible="not es_menor_edad">
+                            <group>
+                                <group string="Datos del Representante">
+                                    <field name="representante_nombre"/>
+                                    <field name="representante_cedula"/>
+                                    <field name="representante_relacion"/>
+                                </group>
+                            </group>
+                            <div class="alert alert-info" role="alert">
+                                <strong>Nota:</strong> El representante legal es obligatorio para socios menores de 18 años.
+                            </div>
+                        </page>
+                        
+                        <page string="Estado y Baja" name="estado" invisible="estado == 'activo'">
+                            <group>
+                                <group>
+                                    <field name="fecha_baja"/>
+                                    <field name="active" invisible="1"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="motivo_baja" nolabel="1" placeholder="Describa el motivo de la baja o retiro..."/>
+                            </group>
+                        </page>
+                        
+                        <page string="Observaciones" name="observaciones">
+                            <field name="observaciones" placeholder="Observaciones adicionales sobre el socio..." nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                
+                <!-- Chatter para seguimiento y actividades -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- ========================================
+         VISTA SEARCH (BÚSQUEDA Y FILTROS)
+    ========================================= -->
+    <record id="view_eps_socio_search" model="ir.ui.view">
+        <field name="name">eps.socio.search</field>
+        <field name="model">eps.socio</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="nombre_completo"/>
+                <field name="name"/>
+                <field name="apellido"/>
+                <field name="cedula"/>
+                <field name="caja_id"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ========================================
+         VISTA KANBAN (TARJETAS)
+    ========================================= -->
+    <record id="view_eps_socio_kanban" model="ir.ui.view">
+        <field name="name">eps.socio.kanban</field>
+        <field name="model">eps.socio</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="cedula"/>
+                <field name="caja_id"/>
+                <field name="edad"/>
+                <field name="genero"/>
+                <field name="estado"/>
+                <field name="telefono"/>
+                <field name="email"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="o_kanban_record_top mb16">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="nombre_completo"/>
+                                    </strong>
+                                    <div class="text-muted">
+                                        <span>Cédula: <field name="cedula"/></span>
+                                    </div>
+                                </div>
+                                <span t-if="record.estado.raw_value == 'activo'" class="badge badge-success">Activo</span>
+                                <span t-if="record.estado.raw_value == 'inactivo'" class="badge badge-warning">Inactivo</span>
+                                <span t-if="record.estado.raw_value == 'retirado'" class="badge badge-danger">Retirado</span>
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <field name="caja_id"/>
+                                <div t-if="record.edad.raw_value">
+                                    Edad: <field name="edad"/> años
+                                </div>
+                                <div t-if="record.telefono.raw_value">
+                                    <i class="fa fa-phone"/> <field name="telefono"/>
+                                </div>
+                                <div t-if="record.email.raw_value">
+                                    <i class="fa fa-envelope"/> <field name="email"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ========================================
+         ACCIÓN PRINCIPAL
+    ========================================= -->
+    <record id="action_eps_socio" model="ir.actions.act_window">
+        <field name="name">Socios</field>
+        <field name="res_model">eps.socio</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="context">{'search_default_filter_activos': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crear el primer socio
+            </p>
+            <p>
+                Registra aquí todos los socios de la caja de ahorro.
+                Los socios son las personas que aportan y pueden acceder a créditos.
+            </p>
+            <p>
+                También puedes importar socios masivamente desde el menú "Importar Socios".
+            </p>
+        </field>
+    </record>
+
+    <!-- ========================================
+         MENÚ
+    ========================================= -->
+    <menuitem id="menu_eps_socio" 
+              name="Socios"
+              parent="menu_eps_root"
+              action="action_eps_socio"
+              sequence="10"/>
+
+</odoo>

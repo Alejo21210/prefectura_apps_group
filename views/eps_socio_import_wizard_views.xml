@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista del wizard de importación -->
+    <record id="view_eps_socio_import_wizard_form" model="ir.ui.view">
+        <field name="name">eps.socio.import.wizard.form</field>
+        <field name="model">eps.socio.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Importar Socios">
+                <field name="state" invisible="1"/>
+                
+                <group invisible="state == 'done'">
+                    <group>
+                        <field name="caja_id" options="{'no_create': True}"/>
+                        <field name="file" filename="filename"/>
+                        <field name="filename" invisible="1"/>
+                    </group>
+                    <group>
+                        <field name="delimiter" invisible="not filename or '.csv' not in filename"/>
+                        <field name="update_existing"/>
+                    </group>
+                </group>
+                
+                <notebook invisible="state != 'done'">
+                    <page string="Resultado de Importación">
+                        <field name="import_result" nolabel="1" readonly="1"/>
+                    </page>
+                </notebook>
+                
+                <group invisible="state == 'done'" string="Formato del archivo">
+                    <div colspan="2" style="margin: 10px;">
+                        <p><b>Columnas requeridas (CSV o XLSX):</b></p>
+                        <ul>
+                            <li><b>cedula</b> - Número de cédula (requerido)</li>
+                            <li><b>nombre</b> - Nombres del socio</li>
+                            <li><b>apellido</b> - Apellidos del socio</li>
+                        </ul>
+                        
+                        <p><b>Columnas opcionales:</b></p>
+                        <ul>
+                            <li>telefono, email, direccion</li>
+                            <li>fecha_ingreso (YYYY-MM-DD o DD/MM/YYYY)</li>
+                            <li>fecha_nacimiento (YYYY-MM-DD o DD/MM/YYYY)</li>
+                            <li>genero (M/F o Mujer/Hombre)</li>
+                            <li>estado_civil (soltero/casado/divorciado/viudo/union_libre)</li>
+                            <li>cabeza_hogar (1/0 o Sí/No)</li>
+                            <li>tiene_discapacidad (1/0 o Sí/No)</li>
+                            <li>porcentaje_discapacidad (0-100)</li>
+                            <li>num_dependientes (número)</li>
+                            <li>es_indigena, es_afroecuatoriano, es_montubio (1/0 o Sí/No)</li>
+                            <li>activo (1/0 o Sí/No, por defecto es Sí)</li>
+                        </ul>
+                        
+                        <p style="margin-top: 15px;"><i>
+                            <b>Nota:</b> Los nombres de columnas no son sensibles a mayúsculas.
+                        </i></p>
+                    </div>
+                </group>
+                
+                <footer>
+                    <button string="Importar" name="action_import" type="object" 
+                            class="btn-primary" invisible="state == 'done'"/>
+                    <button string="Cerrar" name="action_close" type="object" 
+                            class="btn-primary" invisible="state != 'done'"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Acción para abrir el wizard -->
+    <record id="action_eps_socio_import_wizard" model="ir.actions.act_window">
+        <field name="name">Importar Socios</field>
+        <field name="res_model">eps.socio.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    
+    <!-- Menú para importar socios (solo para Secretario, Tesorero y Admin) -->
+    <menuitem id="menu_eps_socio_import" 
+              name="Importar Socios"
+              parent="eps_prefectura.menu_eps_root"
+              action="action_eps_socio_import_wizard"
+              groups="group_eps_secretary,group_eps_treasurer,group_eps_admin"
+              sequence="11"/>
+</odoo>

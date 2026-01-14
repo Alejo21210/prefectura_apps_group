@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_eps_caja_form" model="ir.ui.view">
+        <field name="name">eps.caja.form</field>
+        <field name="model">eps.caja</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="logo" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Ej: Caja de Ahorros San José"/></h1>
+                    </div>
+                    <group>
+                        <group string="Configuración Económica">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="monto_aporte_minimo" widget="monetary"/>
+                            <field name="limite_credito_base" widget="monetary"/>
+                        </group>
+                        <group string="Reglas y Tasas">
+                            <field name="tasa_interes_prestamo"/>
+                            <field name="tasa_mora"/>
+                            <field name="regla_garantes"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eps_caja_list" model="ir.ui.view">
+        <field name="name">eps.caja.list</field>
+        <field name="model">eps.caja</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="monto_aporte_minimo"/>
+                <field name="regla_garantes"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_eps_caja" model="ir.actions.act_window">
+        <field name="name">Cajas de Ahorro</field>
+        <field name="res_model">eps.caja</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ========================================
+         MENÚ PRINCIPAL
+    ========================================= -->
+    <menuitem id="menu_eps_root" 
+              name="EPS - Cajas de Ahorro" 
+              web_icon="eps_prefectura,static/description/icon.png"
+              sequence="10"/>
+    
+    <menuitem id="menu_eps_config" 
+              name="Configuración" 
+              parent="menu_eps_root" 
+              sequence="100"
+              groups="group_eps_admin"/>
+    
+    <menuitem id="menu_eps_cajas" 
+              name="Cajas de Ahorro" 
+              parent="menu_eps_config" 
+              action="action_eps_caja"
+              groups="group_eps_admin"/>
+</odoo>
