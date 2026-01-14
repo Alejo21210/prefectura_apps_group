@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_eps_caja_all,eps.caja.all,model_eps_caja,,1,0,0,0
+access_eps_caja_user,eps.caja.user,model_eps_caja,group_eps_user,1,0,0,0
+access_eps_caja_secretary,eps.caja.secretary,model_eps_caja,group_eps_secretary,1,1,0,0
+access_eps_caja_treasurer,eps.caja.treasurer,model_eps_caja,group_eps_treasurer,1,1,0,0
+access_eps_caja_admin,eps.caja.admin,model_eps_caja,group_eps_admin,1,1,1,1
+access_eps_socio_user,eps.socio.user,model_eps_socio,group_eps_user,1,0,0,0
+access_eps_socio_secretary,eps.socio.secretary,model_eps_socio,group_eps_secretary,1,1,1,0
+access_eps_socio_treasurer,eps.socio.treasurer,model_eps_socio,group_eps_treasurer,1,1,1,0
+access_eps_socio_admin,eps.socio.admin,model_eps_socio,group_eps_admin,1,1,1,1
+access_eps_socio_import_wizard_secretary,eps.socio.import.wizard.secretary,model_eps_socio_import_wizard,group_eps_secretary,1,1,1,1
+access_eps_socio_import_wizard_treasurer,eps.socio.import.wizard.treasurer,model_eps_socio_import_wizard,group_eps_treasurer,1,1,1,1
+access_eps_socio_import_wizard_admin,eps.socio.import.wizard.admin,model_eps_socio_import_wizard,group_eps_admin,1,1,1,1

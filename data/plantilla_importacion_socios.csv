@@ -1,0 +1,3 @@
+cedula,nombre,apellido,genero,fecha_nacimiento,fecha_ingreso,telefono,email,direccion,estado_civil,es_cabeza_hogar,tiene_discapacidad,porcentaje_discapacidad,num_dependientes,es_indigena,es_afroecuatoriano,es_montubio,es_mestizo,activo
+1710034065,Juan,Pérez,Hombre,1985-05-15,2024-01-10,0987654321,juan.perez@ejemplo.com,Quito - Calle Principal 123,casado,1,0,0,2,0,0,0,1,1
+0926687856,María,González,Mujer,1990-08-20,2024-02-15,0991234567,maria.gonzalez@ejemplo.com,Quito - Av. Central 456,soltero,1,1,40,0,0,0,0,1,1

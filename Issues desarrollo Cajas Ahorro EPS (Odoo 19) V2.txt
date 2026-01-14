@@ -1,0 +1,505 @@
+﻿Issues desarrollo
+Cajas Ahorro EPS (Odoo 19)
+Versión: 2 
+Fecha: 21/12/2025
+
+
+ISSUES — MODELO DE CAPAS        2
+ISSUE 00 — CAJAS EPS (multi-caja + parametrización + roles)        3
+ISSUE 01 — LISTADO SOCIOS (Socios + indicadores sociales)        4
+ISSUE 02 — REGISTRO DE APORTES (Aportes mensuales + saldo arrastre)        4
+ISSUE 03 — LIBRO DIARIO INGRESOS (Recibos/Comprobantes)        5
+ISSUE 04 — LIBRO DIARIO EGRESOS (Gastos + desembolsos de crédito)        5
+ISSUE 05 — CARTERA (Créditos + cuotas + cartera vencida)        6
+ISSUE 06 — INTEGRACIÓN CONTABLE EPS - ACCOUNT        6
+ISSUE 07 — PUC / CÓDIGOS CONTABLES Y MAPEO        7
+ISSUE 08 — ESTADO P Y G MENSUALES (Resultados)        8
+ISSUE 09 — BALANCES GENERAL MENSUALES (Activo/Pasivo/Patrimonio)        8
+ISSUE 10 — LIQUIDACIONES (Cierre anual + excedentes)        8
+ISSUE 11 — REPORTES EPS        9
+ISSUE 12 — EPS_DASHBOARD + ALERTAS DE RIESGO        10
+ISSUE 13 — IMPORTACIÓN / MIGRACIÓN + PILOTO 2 CAJAS        11
+ISSUE 14 — MANUALES + CAPACITACIÓN + SOPORTE        12
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ISSUES — MODELO DE CAPAS
+
+Nº ISSUE
+	Nombre del ISSUE
+	Capa principal
+	Rol en el sistema
+	Notas clave
+	ISSUE 00
+	CAJAS EPS (multi-caja + roles + parámetros)
+	Infraestructura EPS
+	Base estructural
+	Define aislamiento, reglas y seguridad. Bloquea todo lo demás.
+	ISSUE 01
+	Listado Socios + indicadores sociales
+	Dominio EPS (Social)
+	Datos maestros
+	Núcleo social del sistema. No depende de la contabilidad.
+	ISSUE 02
+	Registro de Aportes + capital + arrastre
+	Operación EPS
+	Capitalización
+	Alimenta crédito, liquidaciones y patrimonio.
+	ISSUE 03
+	Libro diario de ingresos
+	Operación EPS
+	Operación diaria
+	Genera movimientos EPS y asientos contables.
+	ISSUE 04
+	Libro diario de egresos
+	Operación EPS
+	Operación diaria
+	Incluye desembolsos y gastos.
+	ISSUE 05
+	Cartera / Créditos / cuotas / vencida
+	Operación EPS (Riesgo)
+	Núcleo financiero EPS
+	Corazón del sistema. Controla riesgo y mora.
+	ISSUE 06
+	Integración contable EPS – Account
+	Infraestructura contable
+	Motor contable
+	Define reglas de generación de asientos.
+	ISSUE 07
+	PUC / códigos contables y mapeo
+	Infraestructura contable
+	Codificación
+	Permite auditoría y estados financieros correctos.
+	ISSUE 08
+	Estado P y G mensuales
+	Contabilidad
+	Resultado económico
+	Calcula excedente desde account. No es reporte EPS.
+	ISSUE 09
+	Balance general mensual
+	Contabilidad
+	Situación patrimonial
+	Valida ecuación contable. Insumo para cierres.
+	ISSUE 10
+	Liquidaciones / cierre anual
+	Contabilidad
+	Cierre y distribución
+	Usa P&G y capital. No recalcula operación.
+	ISSUE 11
+	REPORTES EPS (consolidados y resúmenes)
+	Reportes EPS
+	Consulta y presentación
+	Consume resultados, no calcula. Solo lectura.
+	ISSUE 12
+	Dashboard + alertas
+	Analítica / Control
+	Supervisión
+	KPIs y alertas. Capa ejecutiva.
+	ISSUE 13
+	Importación / migración + piloto
+	Soporte al despliegue
+	Validación real
+	No agrega lógica nueva. Prueba el sistema.
+	ISSUE 14
+	Manuales + capacitación + soporte
+	Cierre del proyecto
+	Transferencia
+	Asegura adopción y sostenibilidad.
+	ISSUE 00 — CAJAS EPS (multi-caja + parametrización + roles)
+
+
+Alineación TDR
+* “Manejo de múltiples cajas de ahorro”
+* “Configuración flexible y adaptabilidad”
+* “Autenticación y autorización por roles”
+
+
+Objetivo
+Implementar la base estructural del sistema EPS permitiendo operar múltiples cajas de ahorro dentro de un mismo Odoo, con aislamiento de datos, parámetros propios y control de accesos por rol.
+
+
+Alcance funcional
+
+* Crear y administrar cajas de ahorro.
+* Aislamiento lógico de información por caja (multi-caja).
+* Parámetros configurables por caja:
+   * cuota de aporte,
+   * límites de crédito,
+   * reglas de garantes,
+   * tasas de interés/mora.
+* Gestión de roles y permisos:
+   * tesorero/a,
+   * secretario/a,
+   * presidente/a,
+   * administrador.
+* Configuración de identidad visual de la caja (logo, nombre), reutilizable en PDFs.
+
+Criterios de aceptación
+
+   * Un usuario solo puede ver y operar la(s) caja(s) asignada(s).
+   * Cada caja puede tener reglas distintas sin afectar a otras.
+   * Los PDFs muestran el logo y nombre de la caja correspondiente.
+   * Los roles restringen correctamente acciones (crear, editar, validar, solo lectura).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ISSUE 01 — LISTADO SOCIOS (Socios + indicadores sociales)
+Tab Excel: LISTADOSOCIOS
+Alineación TDR: “Listado de socias y socios” + indicadores sociales
+Objetivo
+Implementar el maestro de socios con atributos sociales para dashboards y reportes.
+Alcance funcional
+   * CRUD de socio: nombres, cédula, fecha ingreso, fecha nacimiento/edad, teléfono, correo.
+   * Campos sociales: mujer/hombre, 3ra edad, discapacidad, cabeza de hogar, etc. (los del Excel y los del TDR).
+   * Reglas: cédula única por caja; estado activo/inactivo; historial de cambios.
+Criterios de aceptación
+   * Se puede registrar/editar/buscar socios por cédula y nombre.
+   * Dashboard puede calcular % mujeres, 3ra edad, discapacidad, cabeza de hogar y edad promedio .
+   * Importación desde plantilla (CSV/XLSX).
+ISSUE 02 — REGISTRO DE APORTES (Aportes mensuales + saldo arrastre)
+Tab Excel: REGISTRO DE APORTES
+Alineación TDR: “Registro de aportes”
+Objetivo
+Registrar aportes por período (mensual) con saldo inicial anual (“Saldo 2024” como en Excel).
+Alcance funcional
+   * Registrar aporte: socio, fecha, período (mes/año), valor, observación.
+   * Parametrizar cuota por caja y vigencia (cambios por reglamento interno, ej. pandemia) .
+   * Cierre/corte: generar saldo arrastre a siguiente año.
+Criterios de aceptación
+   * Reporte “aporte por socio por período” y “saldo acumulado”.
+   * Soporta pagos adelantados (varios meses) y ajustes.
+   * Validación: no duplicar aporte del mismo socio/período (si aplica la regla).
+ISSUE 03 — LIBRO DIARIO INGRESOS (Recibos/Comprobantes)
+Tab Excel: LIBRO DIARIO INGRESOS
+Alineación TDR: “Libro diario de ingresos”
+Objetivo
+Registrar ingresos con desglose por rubros y emitir comprobante PDF.
+Alcance funcional
+   * Ingreso con rubros: aporte, capital, interés, mora/multa, otros (según prácticas descritas) .
+   * Genera account.move automáticamente
+   * Numeración correlativa por caja.
+   * PDF “comprobante de ingreso” con firmas (tesorero + socio).
+Criterios de aceptación
+   * Cada ingreso genera asiento interno (o movimiento) y aparece en consolidado.
+   * Se imprime PDF desde Odoo con logo institucional/caja (según lineamiento conversado en reunión).
+   * Exportación y filtros por fecha, socio, rubro.
+ISSUE 04 — LIBRO DIARIO EGRESOS (Gastos + desembolsos de crédito)
+Tab Excel: LIBRO DIARIO EGRESOS
+Alineación TDR: “Libro diario de egresos (incluido destino de créditos por sectores)”
+Objetivo
+Registrar egresos operativos y desembolsos.
+Alcance funcional
+   * Egreso: fecha, concepto, valor, tipo (operativo / desembolso crédito).
+   * Genera account.move automáticamente
+   * Para desembolso, obligar “destino del crédito” (sectores TDR) .
+   * PDF comprobante de egreso.
+Criterios de aceptación
+   * Egresos alimentan consolidado y estados financieros.
+   * Reporte por sector/destino.
+ISSUE 05 — CARTERA (Créditos + cuotas + cartera vencida)
+Tab Excel: CARTERA
+Alineación TDR: “Control de cartera (saldo, crédito, fecha, plazo, mensualidades… cartera vencida)”
+Objetivo
+Gestionar créditos, cronograma (cuotas) y vencimientos.
+Alcance funcional
+   * Crear crédito: socio, fecha, monto, plazo, tasa, método amortización (francés/alemán), destino.
+   * Generar tabla amortización.
+   * Registrar pagos de cuota con validaciones (alerta si pagan “solo interés” repetidamente) .
+   * Calcular cartera vencida por corte mensual (como en Excel “vencida marzo/junio/sep/dic”).
+Criterios de aceptación
+   * El saldo del crédito se actualiza con pagos.
+   * Indicador: total pagar / total cobrar / saldo por cobrar.
+   * Reporte de vencida por período.
+   * Un garante no puede respaldar más de X créditos activos (parametrizable por caja).
+ISSUE 06 — INTEGRACIÓN CONTABLE EPS - ACCOUNT
+
+
+Alineación TDR
+   * “Generar reportes financieros confiables y auditables”
+   * “Cumplimiento normativo y trazabilidad”
+
+
+Objetivo
+Definir e implementar la integración entre los módulos EPS y el módulo account de Odoo, utilizando account.move como motor contable, sin trasladar a account la lógica funcional EPS.
+
+
+Alcance funcional
+
+   * Definir cuándo se generan asientos contables:
+   * ingresos (aportes, intereses, mora, multas, otros),
+   * egresos (gastos, desembolsos de crédito),
+   * liquidaciones y cierres anuales.
+   * Generación automática de account.move desde EPS.
+   * Asientos:
+   * reversibles,
+   * trazables (enlace eps_* ↔ account.move),
+   * no editables manualmente por usuarios EPS.
+   * Sincronización entre reportes EPS y contables.
+
+Criterios de aceptación
+
+      * Todo ingreso/egreso EPS genera su asiento contable correspondiente.
+      * Los reportes contables (account) cuadran con los reportes EPS del mismo período.
+      * Cada asiento permite navegar al registro EPS origen.
+      * No se permiten desbalances entre EPS y contabilidad.
+ISSUE 07 — PUC / CÓDIGOS CONTABLES Y MAPEO
+
+
+Alineación TDR
+      * “Codificación contable”
+      * “Balances, P&G y auditoría”
+
+Objetivo
+Implementar un catálogo de cuentas EPS (eps.cuenta) y su mapeo con account.account, permitiendo una correcta codificación contable de todos los movimientos.
+
+
+Alcance funcional
+         * Crear catálogo EPS de cuentas (eps.cuenta).
+         * Relación de cada cuenta EPS con una cuenta contable (account.account).
+         * Mapeo por:
+         * rubro de ingreso (aporte, interés, mora, otros),
+         * tipo de egreso,
+         * liquidaciones.
+         * Uso automático del mapeo al generar account.move.
+
+Criterios de aceptación
+            * Cada asiento contable se genera con la cuenta correcta.
+            * El catálogo EPS es configurable sin tocar código.
+            * Las cuentas permiten exportación y auditoría contable.
+            * No existen asientos “sin cuenta” o mal codificados.
+
+
+
+
+
+
+
+
+ISSUE 08 — ESTADO P Y G MENSUALES (Resultados)
+Tab Excel: ESTADO P Y G MENSUALES
+Alineación TDR: “Estado de pérdidas y ganancias mensualizado”
+Criterios de aceptación
+            * Genera P&G mensual: ingresos (interés, mora, multas, otros) − gastos = excedente.
+            * Genera account.move automáticamente
+            * Exportación e impresión.
+ISSUE 09 — BALANCES GENERAL MENSUALES (Activo/Pasivo/Patrimonio)
+Tab Excel: BALANCES GENERAL MENSUALES
+Alineación TDR: Resumen/estados financieros + reportes
+Objetivo
+            * Balance mensual (activo, pasivo, patrimonio) con validación de cuadratura.
+            * Genera account.move automáticamente
+Criterios de aceptación
+            * Activo = Pasivo + Patrimonio por mes.
+            * Soporta cuentas “pasivas” tipo fondo estratégico (mencionado en reunión) .
+ISSUE 10 — LIQUIDACIONES (Cierre anual + excedentes)
+Tab Excel: LIQUIDACIONES
+Alineación: reparto de excedentes proporcional por capital/tiempo aportado (explicado en reunión)
+Objetivo
+            * Automatizar cálculo y liquidación de excedentes al cierre (y/o reglas por caja: retener último mes, etc.).
+            * Genera account.move automáticamente
+Criterios de aceptación
+            * Cálculo proporcional según reglamento interno parametrizable.
+            * Genera acta/recibo de liquidación por socio + reporte total.
+ISSUE 11 — REPORTES EPS
+Tab Excel (referencia)
+            * CONSOLIDADO DE INGRESOS
+            * CONSOLIDADO DE EGRESOS
+            * SALDOS
+            * ESTADOS FINANCIEROS
+Alineación TDR
+            * “Consolidados financieros”
+            * “Estados financieros”
+            * “Reportes periódicos y generales”
+            * “Resumen del estado financiero”
+Objetivo
+Centralizar la generación de reportes financieros y sociales EPS, permitiendo su consulta, exportación e impresión institucional, sin alterar la operación diaria ni la contabilidad base.
+Alcance funcional
+Consolidado de ingresos
+            * Por mes/año
+            * Por rubro
+            * Cuadre con libro diario
+Consolidado de egresos
+            * Por mes/año
+            * Por concepto
+            * Cuadre con libro diario
+Saldos 
+Cálculo de saldos por período: efectivo, bancos, cartera por cobrar, inversiones/plazo fijo (si aplica), etc. (tal como piden en reunión) .
+            * Caja
+            * Bancos
+            * Cartera
+            * Disponible
+            * Corte mensual
+Estados financieros EPS
+Empaquetar reportes: ingresos, egresos, indicadores sociales y destino de créditos, con filtros por período y caja.
+            * Resumen estado financiero
+            * Ingresos / egresos
+            * Indicadores sociales
+            * Destino de créditos por sector
+Criterios de aceptación
+            * Todos los reportes:
+            * filtran por caja y período
+            * cuadran con los libros diarios y contabilidad
+            * son exportables (PDF / XLSX)
+            * El resumen imprimir es apto para asambleas
+            * No se puede modificar información desde reportes
+ISSUE 12 — EPS_DASHBOARD + ALERTAS DE RIESGO
+
+
+Alineación TDR
+            * “Sistema de monitoreo con dashboards”
+            * “Indicadores financieros y sociales”
+
+Objetivo
+Proveer un dashboard visual que consolide indicadores financieros y sociales, y emita alertas tempranas de riesgo para la gestión de la caja.
+
+
+Alcance funcional
+               * Dashboard filtrable por caja y período.
+               * KPIs financieros:
+               * disponible,
+               * cartera total,
+               * cartera vencida,
+               * excedente.
+               * KPIs sociales:
+               * % mujeres,
+               * % 3ra edad,
+               * % discapacidad,
+               * edad promedio.
+               * Alertas mínimas:
+               * pagos reiterados solo de interés,
+               * concentración atípica de capital,
+               * créditos fuera de parámetros.
+
+Criterios de aceptación
+                  * El dashboard refleja datos reales del período seleccionado.
+                  * El dashboard se presenta en vistas gráficas (tarjetas, barras, líneas), no solo tablas.
+                  * Los indicadores sociales coinciden con los reportes EPS.
+                  * Las alertas se generan automáticamente según reglas definidas.
+                  * Los usuarios ven solo información de su caja.
+ISSUE 13 — IMPORTACIÓN / MIGRACIÓN + PILOTO 2 CAJAS
+
+
+Alineación TDR
+                  * “Migración de datos”
+                  * “Piloto en 2 cajas de ahorro”
+
+Objetivo
+Permitir la migración controlada de datos históricos desde Excel y validar el sistema mediante un piloto real en dos cajas de ahorro.
+
+
+Alcance funcional
+                     * Plantillas de importación para:
+                     * socios,
+                     * aportes,
+                     * créditos,
+                     * cuotas,
+                     * saldos iniciales.
+                     * Validaciones de consistencia (cuadres).
+                     * Ejecución de piloto en 2 cajas:
+                     * carga,
+                     * operación,
+                     * revisión,
+                     * conformidad.
+
+Criterios de aceptación
+                        * Los datos importados cuadran con el Excel original.
+                        * No existen saldos ni créditos inconsistentes.
+                        * Las cajas piloto pueden operar el sistema sin incidencias críticas.
+                        * Se documenta acta de conformidad del piloto.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ISSUE 14 — MANUALES + CAPACITACIÓN + SOPORTE
+
+
+Alineación TDR
+                        * “Capacitación avalada por la academia (4h)”
+                        * “Entrega de manuales y código fuente”
+                        * “Soporte y estabilización”
+
+Objetivo
+Garantizar la transferencia de conocimiento, adopción del sistema y estabilidad inicial mediante documentación, capacitación y soporte.
+
+
+Alcance funcional
+                           * Manual de usuario.
+                           * Manual técnico.
+                           * Guía de instalación y configuración.
+                           * Material de capacitación (4 horas).
+                           * Evidencias de capacitación.
+                           * Soporte de estabilización según alcance del proyecto.
+
+Criterios de aceptación
+                              * Los manuales permiten operar el sistema sin asistencia técnica.
+                              * La capacitación se ejecuta y documenta.
+                              * El sistema entra en producción estable.
+                              * El código fuente es entregado y documentado.
