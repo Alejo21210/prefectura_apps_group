@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_users_form_eps" model="ir.ui.view">
-        <field name="name">res.users.form.eps</field>
+    <!-- Heredar vista de formulario de usuarios -->
+    <record id="view_users_form_cartera" model="ir.ui.view">
+        <field name="name">res.users.form.cartera</field>
         <field name="model">res.users</field>
         <field name="inherit_id" ref="base.view_users_form"/>
         <field name="arch" type="xml">
-            <notebook position="inside">
-                <page string="Sistema EPS - Cajas">
-                    <group>
-                        <field name="eps_caja_ids" widget="many2many_tags" options="{'no_create': True}"/>
-                    </group>
-                </page>
-            </notebook>
+            
+            <xpath expr="//page[@name='access_rights']//group" position="after">
+                <group string="Cartera de Creditos">
+                    <field name="cartera_role" widget="radio"/>
+                </group>
+            </xpath>
+            
         </field>
     </record>
 </odoo>

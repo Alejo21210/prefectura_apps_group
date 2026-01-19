@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="prefectura_ute_6.list">
+      <field name="name">prefectura_ute_6 list</field>
+      <field name="model">prefectura_ute_6.prefectura_ute_6</field>
+      <field name="arch" type="xml">
+        <list>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </list>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="prefectura_ute_6.action_window">
+      <field name="name">prefectura_ute_6 window</field>
+      <field name="res_model">prefectura_ute_6.prefectura_ute_6</field>
+      <field name="view_mode">list,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="prefectura_ute_6.action_server">
+      <field name="name">prefectura_ute_6 server</field>
+      <field name="model_id" ref="model_prefectura_ute_6_prefectura_ute_6"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "list,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="prefectura_ute_6" id="prefectura_ute_6.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="prefectura_ute_6.menu_1" parent="prefectura_ute_6.menu_root"/>
+    <menuitem name="Menu 2" id="prefectura_ute_6.menu_2" parent="prefectura_ute_6.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="prefectura_ute_6.menu_1_list" parent="prefectura_ute_6.menu_1"
+              action="prefectura_ute_6.action_window"/>
+    <menuitem name="Server to list" id="prefectura_ute_6" parent="prefectura_ute_6.menu_2"
+              action="prefectura_ute_6.action_server"/>
+-->
+  </data>
+</odoo>

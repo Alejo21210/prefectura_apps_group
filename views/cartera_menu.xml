@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- MENÚ PRINCIPAL -->
+    <menuitem id="menu_cartera_root"
+              name="Cartera"
+              sequence="10"/>
+
+    <!-- MENÚ CRÉDITOS -->
+    <menuitem id="menu_cartera_creditos"
+              name="Créditos"
+              parent="menu_cartera_root"
+              sequence="10"/>
+
+    <menuitem id="menu_cartera_credito_todos"
+              name="Todos los Créditos"
+              parent="menu_cartera_creditos"
+              action="action_cartera_credito"
+              sequence="10"/>
+
+    <menuitem id="menu_cartera_credito_activos"
+              name="Créditos Activos"
+              parent="menu_cartera_creditos"
+              action="action_cartera_credito_activos"
+              sequence="20"/>
+
+    <menuitem id="menu_cartera_credito_vencidos"
+              name="Créditos Vencidos"
+              parent="menu_cartera_creditos"
+              action="action_cartera_credito_vencidos"
+              sequence="30"/>
+
+    <!-- MENÚ CUOTAS -->
+    <menuitem id="menu_cartera_cuotas"
+              name="Cuotas"
+              parent="menu_cartera_root"
+              sequence="20"/>
+
+    <menuitem id="menu_cartera_cuota_todas"
+              name="Todas las Cuotas"
+              parent="menu_cartera_cuotas"
+              action="action_cartera_cuota"
+              sequence="10"/>
+
+    <menuitem id="menu_cartera_cuota_pendientes"
+              name="Cuotas Pendientes"
+              parent="menu_cartera_cuotas"
+              action="action_cartera_cuota_pendientes"
+              sequence="20"/>
+
+    <menuitem id="menu_cartera_cuota_vencidas"
+              name="Cuotas Vencidas"
+              parent="menu_cartera_cuotas"
+              action="action_cartera_cuota_vencidas"
+              sequence="30"/>
+
+    <!-- MENÚ REPORTES -->
+    <menuitem id="menu_cartera_reportes"
+              name="Reportes"
+              parent="menu_cartera_root"
+              sequence="30"/>
+
+    <menuitem id="menu_cartera_pago_historial"
+              name="Historial de Pagos"
+              parent="menu_cartera_reportes"
+              action="action_cartera_pago"
+              sequence="30"/>
+
+
+</odoo>

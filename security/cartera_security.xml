@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- GRUPOS DE SEGURIDAD -->
+
+        <!-- Usuario de Cartera -->
+        <record id="group_cartera_user" model="res.groups">
+            <field name="name">Cartera: Usuario</field>
+            <field name="comment">Puede ver creditos y cuotas</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <!-- Gestor de Cartera -->
+        <record id="group_cartera_manager" model="res.groups">
+            <field name="name">Cartera: Gestor</field>
+            <field name="comment">Puede crear y gestionar creditos</field>
+            <field name="implied_ids" eval="[(4, ref('group_cartera_user'))]"/>
+        </record>
+
+        <!-- Administrador de Cartera -->
+        <record id="group_cartera_admin" model="res.groups">
+            <field name="name">Cartera: Administrador</field>
+            <field name="comment">Acceso total a modulo de cartera</field>
+            <field name="implied_ids" eval="[(4, ref('group_cartera_manager'))]"/>
+        </record>
+
+        <!-- SECUENCIAS -->
+        
+        <!-- Secuencia para Creditos -->
+        <record id="seq_cartera_credito" model="ir.sequence">
+            <field name="name">Secuencia de Creditos</field>
+            <field name="code">cartera.credito</field>
+            <field name="prefix">CRE</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+        </record>
+
+        <!-- Secuencia para Pagos -->
+        <record id="seq_cartera_pago" model="ir.sequence">
+            <field name="name">Secuencia de Pagos</field>
+            <field name="code">cartera.pago</field>
+            <field name="prefix">PAG</field>
+            <field name="padding">6</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+        </record>
+
+    </data>
+</odoo>

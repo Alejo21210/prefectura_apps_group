@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- VISTA LISTA DE CRÉDITOS -->
+    <record id="view_cartera_credito_tree" model="ir.ui.view">
+        <field name="name">cartera.credito.tree</field>
+        <field name="model">cartera.credito</field>
+        <field name="arch" type="xml">
+            <list string="Creditos" decoration-danger="esta_vencido" decoration-success="state=='pagado'">
+                <field name="name"/>
+                <field name="socio_id"/>
+                <field name="garante_id"/>
+                <field name="fecha"/>
+                <field name="monto" sum="Total"/>
+                <field name="plazo"/>
+                <field name="tasa"/>
+                <field name="metodo_amortizacion"/>
+                <field name="saldo_actual" sum="Saldo Total"/>
+                <field name="state" 
+                       decoration-bf="1"
+                       widget="badge"
+                       decoration-info="state=='borrador'"
+                       decoration-warning="state=='aprobado'"
+                       decoration-success="state in ['activo', 'pagado']"
+                       decoration-muted="state=='cancelado'"/>
+                <field name="esta_vencido" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- VISTA FORMULARIO DE CRÉDITO -->
+    <record id="view_cartera_credito_form" model="ir.ui.view">
+        <field name="name">cartera.credito.form</field>
+        <field name="model">cartera.credito</field>
+        <field name="arch" type="xml">
+            <form string="Credito">
+                <header>
+                    <button name="action_aprobar" string="Aprobar" type="object" 
+                            class="oe_highlight" invisible="state != 'borrador'"/>
+                    <button name="action_activar" string="Activar y Generar Tabla" type="object" 
+                            class="oe_highlight" invisible="state != 'aprobado'"/>
+                    <button name="generar_tabla_amortizacion" string="Regenerar Tabla" type="object" 
+                            invisible="state not in ['aprobado', 'activo']"
+                            confirm="¿Está seguro de regenerar la tabla de amortización? Se eliminarán las cuotas existentes."/>
+                    <button name="action_cancelar" string="Cancelar" type="object" 
+                            invisible="state in ['pagado', 'cancelado']"/>
+                    <button name="action_volver_borrador" string="Volver a Borrador" type="object" 
+                            invisible="state not in ['aprobado', 'cancelado']"/>
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="borrador,aprobado,activo,pagado"/>
+                </header>
+                
+                <sheet>
+                    <!-- Indicadores -->
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_view_cuotas" icon="fa-list-ol">
+                            <field name="num_cuotas" widget="statinfo" string="Cuotas"/>
+                        </button>
+                    </div>
+                    
+                    <!-- Título -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    
+                    <!-- Alertas -->
+                    <div class="alert alert-warning" role="alert" invisible="not esta_vencido">
+                        <i class="fa fa-exclamation-triangle"/> Este crédito tiene cuotas vencidas
+                    </div>
+                    
+                    <group>
+                        <group string="Informacion del Credito">
+                            <field name="socio_id" 
+                                   readonly="state not in ['borrador', 'aprobado']"
+                                   options="{'no_create': True, 'no_open': True}"/>
+                            <field name="garante_id" 
+                                   readonly="state not in ['borrador', 'aprobado']"
+                                   options="{'no_create': True, 'no_open': True}"/>
+                            <field name="fecha" readonly="state not in ['borrador', 'aprobado']"/>
+                            <field name="destino" readonly="state not in ['borrador', 'aprobado']"/>
+                        </group>
+                        
+                        <group string="Terminos del Credito">
+                            <field name="monto" readonly="state not in ['borrador', 'aprobado']"/>
+                            <field name="plazo" readonly="state not in ['borrador', 'aprobado']"/>
+                            <field name="tasa" readonly="state not in ['borrador', 'aprobado']"/>
+                            <field name="metodo_amortizacion" readonly="state not in ['borrador', 'aprobado']"/>
+                        </group>
+                    </group>
+                    
+                    <!-- Indicadores financieros -->
+                    <group string="Indicadores">
+                        <group>
+                            <field name="total_a_pagar" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="total_cobrar" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                        <group>
+                            <field name="saldo_por_cobrar" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="saldo_actual" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                    
+                    <!-- Notebook -->
+                    <notebook>
+                        <page string="Tabla de Amortización" name="cuotas">
+                            <field name="cuota_ids" readonly="1">
+                                <list string="Cuotas" 
+                                      decoration-danger="estado=='vencida'"
+                                      decoration-success="estado=='pagada'"
+                                      decoration-warning="estado=='parcial'">
+                                    <field name="numero_cuota"/>
+                                    <field name="fecha_vencimiento"/>
+                                    <field name="monto_capital" sum="Total Capital"/>
+                                    <field name="monto_interes" sum="Total Interés"/>
+                                    <field name="monto_total" sum="Total"/>
+                                    <field name="saldo_inicial"/>
+                                    <field name="saldo_final"/>
+                                    <field name="monto_pagado" sum="Total Pagado"/>
+                                    <field name="saldo_pendiente" sum="Saldo Pendiente"/>
+                                    <field name="dias_vencido"/>
+                                    <field name="estado" 
+                                           decoration-bf="1"
+                                           widget="badge"
+                                           decoration-danger="estado=='vencida'"
+                                           decoration-success="estado=='pagada'"
+                                           decoration-warning="estado=='parcial'"
+                                           decoration-info="estado=='pendiente'"/>
+                                    <button name="action_registrar_pago" 
+                                            string="Registrar Pago" 
+                                            type="object"
+                                            icon="fa-money"
+                                            invisible="estado=='pagada'"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <page string="Pagos Realizados" name="pagos">
+                            <field name="pago_ids" readonly="1">
+                                <list string="Pagos">
+                                    <field name="name"/>
+                                    <field name="fecha"/>
+                                    <field name="cuota_id"/>
+                                    <field name="monto" sum="Total Pagado"/>
+                                    <field name="aplicado_a_interes" sum="Total Interés"/>
+                                    <field name="aplicado_a_capital" sum="Total Capital"/>
+                                    <field name="es_solo_interes" widget="boolean_toggle"/>
+                                    <field name="comprobante"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                
+                <!-- Chatter -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- VISTA DE BUSQUEDA -->
+    <record id="view_cartera_credito_search" model="ir.ui.view">
+        <field name="name">cartera.credito.search</field>
+        <field name="model">cartera.credito</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="socio_id"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACCIONES -->
+    <record id="action_cartera_credito" model="ir.actions.act_window">
+        <field name="name">Creditos</field>
+        <field name="res_model">cartera.credito</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crear un nuevo credito
+            </p>
+            <p>
+                Registra creditos para socios con tabla de amortizacion automatica.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_cartera_credito_activos" model="ir.actions.act_window">
+        <field name="name">Creditos Activos</field>
+        <field name="res_model">cartera.credito</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', '=', 'activo')]</field>
+        <field name="context">{'search_default_activo': 1}</field>
+    </record>
+
+    <record id="action_cartera_credito_vencidos" model="ir.actions.act_window">
+        <field name="name">Creditos Vencidos</field>
+        <field name="res_model">cartera.credito</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('esta_vencido', '=', True)]</field>
+        <field name="context">{'search_default_vencido': 1}</field>
+    </record>
+
+</odoo>
