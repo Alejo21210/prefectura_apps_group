@@ -1,0 +1,23 @@
+<odoo>
+    <menuitem id="menu_aportes_root"
+              name="Registro de Aportes"
+              sequence="10"/>
+
+    <menuitem id="menu_aporte_registro"
+              name="Aportes Mensuales"
+              parent="menu_aportes_root"
+              action="action_aporte_registro"
+              sequence="10"/>
+
+    <menuitem id="menu_saldo_anual"
+              name="Saldos Anuales"
+              parent="menu_aportes_root"
+              action="action_saldo_anual"
+              sequence="20"/>
+
+    <menuitem id="menu_excedente"
+              name="Excedentes"
+              parent="menu_aportes_root"
+              action="action_excedente"
+              sequence="30"/>
+</odoo>

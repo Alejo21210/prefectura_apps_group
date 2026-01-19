@@ -1,0 +1,52 @@
+<odoo>
+    <record id="view_excedente_list" model="ir.ui.view">
+        <field name="name">aporte.excedente.list</field>
+        <field name="model">aporte.excedente</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="socio_id"/>
+                <field name="anio"/>
+                <field name="saldo_promedio"/>
+                <field name="porcentaje_total"/>
+                <field name="rendimiento"/>
+                <field name="excedente"/>
+                <field name="anticipo"/>
+                <field name="excedente_final"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_excedente_form" model="ir.ui.view">
+        <field name="name">aporte.excedente.form</field>
+        <field name="model">aporte.excedente</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="socio_id"/>
+                    <field name="anio"/>
+                </group>
+
+                <group>
+                    <field name="saldo_promedio" readonly="1"/>
+                    <field name="porcentaje_total" readonly="1"/>
+                </group>
+
+                <group>
+                    <field name="rendimiento"/>
+                    <field name="excedente" readonly="1"/>
+                </group>
+
+                <group>
+                    <field name="anticipo"/>
+                    <field name="excedente_final" readonly="1"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_excedente" model="ir.actions.act_window">
+        <field name="name">Excedentes</field>
+        <field name="res_model">aporte.excedente</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

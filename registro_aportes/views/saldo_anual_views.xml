@@ -1,0 +1,42 @@
+<odoo>
+    <record id="view_saldo_anual_list" model="ir.ui.view">
+        <field name="name">aporte.saldo.anual.list</field>
+        <field name="model">aporte.saldo.anual</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="socio_id"/>
+                <field name="anio"/>
+                <field name="saldo_inicial"/>
+                <field name="saldo_diciembre"/>
+                <field name="saldo_promedio"/>
+                <field name="cerrado"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_saldo_anual_form" model="ir.ui.view">
+        <field name="name">aporte.saldo.anual.form</field>
+        <field name="model">aporte.saldo.anual</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="socio_id"/>
+                    <field name="anio"/>
+                    <field name="saldo_inicial"/>
+                </group>
+
+                <group>
+                    <field name="saldo_diciembre" readonly="1"/>
+                    <field name="saldo_promedio" readonly="1"/>
+                    <field name="cerrado"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_saldo_anual" model="ir.actions.act_window">
+        <field name="name">Saldos Anuales</field>
+        <field name="res_model">aporte.saldo.anual</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

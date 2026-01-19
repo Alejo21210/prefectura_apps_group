@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_aporte_registro,access_aporte_registro,model_aporte_registro,,1,1,1,1
+access_aporte_saldo_anual,access_aporte_saldo_anual,model_aporte_saldo_anual,,1,1,1,1
+access_aporte_excedente,access_aporte_excedente,model_aporte_excedente,,1,1,1,1
+access_aporte_egreso,access_aporte_egreso,model_aporte_egreso,,1,1,1,1
