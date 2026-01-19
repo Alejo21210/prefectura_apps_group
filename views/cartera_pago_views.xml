@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- VISTA FORM DE PAGO -->
+    <record id="view_cartera_pago_form" model="ir.ui.view">
+        <field name="name">cartera.pago.form</field>
+        <field name="model">cartera.pago</field>
+        <field name="arch" type="xml">
+            <form string="Registrar Pago">
+                <sheet>
+                    <group>
+                        <group string="Información del Pago">
+                            <field name="credito_id" readonly="context.get('default_credito_id', False)"/>
+                            <field name="cuota_id" 
+                                   readonly="context.get('default_cuota_id', False)"
+                                   domain="[('credito_id', '=', credito_id), ('estado', '!=', 'pagada')]"
+                                   options="{'no_create': True}"/>
+                            <field name="socio_id" readonly="1"/>
+                            <field name="fecha"/>
+                            <field name="monto"/>
+                            <field name="comprobante"/>
+                        </group>
+                        
+                        <group string="Distribución (Automática)">
+                            <field name="aplicado_a_interes" readonly="1"/>
+                            <field name="aplicado_a_capital" readonly="1"/>
+                            <field name="es_solo_interes" readonly="1" widget="boolean"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <field name="notas" placeholder="Notas adicionales sobre el pago..."/>
+                    </group>
+                    
+                    <div class="alert alert-warning" role="alert" invisible="not es_solo_interes">
+                        <i class="fa fa-exclamation-triangle"/> 
+                        <strong>Advertencia:</strong> Este pago cubre solo el interés de la cuota.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- VISTA LISTA DE PAGOS -->
+    <record id="view_cartera_pago_tree" model="ir.ui.view">
+        <field name="name">cartera.pago.tree</field>
+        <field name="model">cartera.pago</field>
+        <field name="arch" type="xml">
+            <list string="Pagos">
+                <field name="name"/>
+                <field name="fecha"/>
+                <field name="credito_id"/>
+                <field name="cuota_id"/>
+                <field name="socio_id"/>
+                <field name="monto" sum="Total"/>
+                <field name="aplicado_a_interes" sum="Total Interés"/>
+                <field name="aplicado_a_capital" sum="Total Capital"/>
+                <field name="es_solo_interes" widget="boolean_toggle"/>
+                <field name="comprobante"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- VISTA DE BUSQUEDA -->
+    <record id="view_cartera_pago_search" model="ir.ui.view">
+        <field name="name">cartera.pago.search</field>
+        <field name="model">cartera.pago</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="credito_id"/>
+                <field name="socio_id"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACCIONES -->
+    <record id="action_cartera_pago" model="ir.actions.act_window">
+        <field name="name">Historial de Pagos</field>
+        <field name="res_model">cartera.pago</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{}</field>
+    </record>
+
+    <!-- VISTA DE CONFIGURACIÓN -->
+    <record id="view_cartera_config_settings" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.cartera</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app string="Cartera" name="cartera">
+                    <block title="Parámetros de Cartera">
+                        <setting>
+                            <label for="max_creditos_garante"/>
+                            <div class="text-muted">
+                                Número máximo de créditos activos que puede respaldar un garante
+                            </div>
+                            <div class="content-group">
+                                <field name="max_creditos_garante" class="oe_inline"/>
+                            </div>
+                        </setting>
+                        
+                        <setting>
+                            <label for="alertas_solo_interes"/>
+                            <div class="text-muted">
+                                Número de pagos consecutivos de solo interés antes de generar alerta
+                            </div>
+                            <div class="content-group">
+                                <field name="alertas_solo_interes" class="oe_inline"/>
+                            </div>
+                        </setting>
+                        
+                        <setting>
+                            <label for="metodo_amortizacion_default"/>
+                            <div class="text-muted">
+                                Método de amortización que se selecciona por defecto
+                            </div>
+                            <div class="content-group">
+                                <field name="metodo_amortizacion_default" class="oe_inline"/>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

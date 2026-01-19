@@ -1,34 +1,46 @@
 {
-    'name': 'Sistema de Cajas EPS - Prefectura',
-    'version': '19.0.1.0.0',
-    'summary': 'Gestión Multi-Caja EPS con roles y parámetros',
+    'name': "Gestión de Cartera de Créditos - Prefectura UTE",
+
+    'summary': "Control de cartera: créditos, cuotas, amortización y cartera vencida",
+
     'description': """
-        Sistema de Cajas de Ahorro de la Economía Popular y Solidaria (EPS)
-        ======================================================================
-        
-        * Gestión de múltiples cajas de ahorro
-        * Control de socios con indicadores sociales
-        * Registro de aportes y créditos
-        * Roles y permisos por caja
-        * Reportes financieros y sociales
-        
-        GAD Prefectura de Pichincha - Proyecto MERA
+        Módulo completo para la gestión de cartera de créditos que incluye:
+        * Creación de créditos con socios y garantes
+        * Generación automática de tabla de amortización (método francés/alemán)
+        * Registro de pagos con validaciones
+        * Cálculo de cartera vencida por período
+        * Alertas de pagos solo interés
+        * Reportes e indicadores de cartera
     """,
-    'author': 'Alejo - Prefectura de Pichincha',
-    'website': 'https://www.pichincha.gob.ec',
-    'category': 'Accounting/Finance',
-    'license': 'LGPL-3',
+
+    'author': "Prefectura UTE",
+    'website': "https://www.yourcompany.com",
+
+    'category': 'Accounting',
+    'version': '1.0',
+
+    # any module necessary for this one to work correctly
     'depends': ['base', 'mail'],
+
+    # always loaded
     'data': [
-        'security/eps_security.xml',
+        'security/cartera_security.xml',
         'security/ir.model.access.csv',
-        'views/eps_caja_views.xml',
-        'views/eps_socio_views.xml',
-        'views/eps_socio_import_wizard_views.xml',
+        'security/cartera_record_rules.xml',
+        'views/cartera_credito_views.xml',
+        'views/cartera_cuota_views.xml',
+        'views/cartera_pago_views.xml',
+        'views/cartera_menu.xml',
         'views/res_users_views.xml',
+        'views/views.xml',
+        'views/templates.xml',
     ],
-    'demo': [],
+    # only loaded in demonstration mode
+    'demo': [
+        'demo/demo.xml',
+    ],
     'installable': True,
     'application': True,
     'auto_install': False,
 }
+
