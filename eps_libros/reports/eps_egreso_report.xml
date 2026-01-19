@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_eps_egreso" model="ir.actions.report">
+        <field name="name">Comprobante de Egreso</field>
+        <field name="model">eps.egreso</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">eps_libros.report_egreso_template</field>
+        <field name="report_file">eps_libros.report_egreso_template</field>
+        <field name="binding_model_id" ref="model_eps_egreso"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_egreso_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 class="text-center">COMPROBANTE DE EGRESO</h2>
+                        <h3 class="text-center"><span t-field="o.name"/></h3>
+                        
+                        <div t-if="o.state == 'cancel'" class="text-center" style="color:red; border: 2px solid red; padding: 10px; margin-bottom: 20px;">
+                            <strong>*** DOCUMENTO ANULADO ***</strong>
+                        </div>
+
+                        <br/>
+                        <div class="row">
+                            <div class="col-6">
+                                <strong>Fecha:</strong> <span t-field="o.fecha"/><br/>
+                                <strong>Beneficiario:</strong> <span t-field="o.beneficiario"/><br/>
+                                <strong>Tipo:</strong> <span t-field="o.tipo_egreso"/>
+                            </div>
+                            <div class="col-6 text-end">
+                                <strong>Monto:</strong> 
+                                <span t-field="o.monto" t-options='{"widget": "monetary", "display_currency": o.env.company.currency_id}' style="font-size: 20px; font-weight: bold;"/>
+                            </div>
+                        </div>
+                        <br/>
+                        <p><strong>Concepto:</strong> <span t-field="o.concepto"/></p>
+                        
+                        <p t-if="o.destino_credito"><strong>Sector Inversión:</strong> <span t-field="o.destino_credito"/></p>
+                        
+                        <br/><br/><br/><br/>
+                        
+                        <div class="row">
+                            <div class="col-6 text-center">
+                                ______________________<br/>
+                                <strong>Tesorero/a</strong>
+                            </div>
+                            <div class="col-6 text-center">
+                                ______________________<br/>
+                                <strong>Recibí Conforme</strong><br/>
+                                <span t-field="o.beneficiario"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
